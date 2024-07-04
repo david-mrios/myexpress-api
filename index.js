@@ -21,5 +21,5 @@ go()
 app.get('/', async (req, res) => {
     const [users] = await db.execute('SELECT * FROM usuario')
     console.log(users)
-    res.send(`<ul>${users.map(personas => `<li>${personas.nombre}</li>`).join('')}</ul>`)
+    res.send(`<ul>${users.map(user => `<li>${user.nombre}</li>`).join('')}</ul>`)
 })
