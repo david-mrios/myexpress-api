@@ -11,7 +11,7 @@ async function go() {
         port: 3306,
         user: 'root',
         password: 'root',
-        database: 'default' 
+        database: 'inventory' 
     })
     app.listen(3000)
 }
@@ -20,6 +20,15 @@ go()
 
 app.get('/', async (req, res) => {
     const [users] = await db.execute('SELECT * FROM usuario')
-    console.log(users)
+    console.log(users)                
     res.send(`<ul>${users.map(user => `<li>${user.nombre}</li>`).join('')}</ul>`)
+})
+
+app.post('/', async (req, res) => {
+})
+
+app.post('/', async (req, res) => {
+})
+
+app.delete('/', async (req, res) => {
 })
