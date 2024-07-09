@@ -36,8 +36,8 @@ app.get("/", async (req, res) => {
 });
 
 // Example: http://localhost:3000/search/1
-app.get("/search/:id", async (req, res) => {
-  const id = req.params.id;
+app.get("/search", async (req, res) => {
+  const id = req.query.id;
   const [post] = await db.execute(`select * from usuario where id = ${id}`);
 
   try {
@@ -55,7 +55,7 @@ app.get("/search/:id", async (req, res) => {
 });
 
 // Example: http://localhost:3000/create/David Membreño/20
-app.get("/create/:name/:age", async (req, res) => {
+app.post("/create/:name/:age", async (req, res) => {
   const data = [req.params.name, Number(req.params.age)];
   console.log(data);
   try {
@@ -74,7 +74,7 @@ app.get("/create/:name/:age", async (req, res) => {
   }
 });
 
-app.post("/update", async (req, res) => {
+app.put("/update", async (req, res) => {
   const data = req.body;
   let updates = [];
   let params = [];
@@ -104,7 +104,7 @@ app.post("/update", async (req, res) => {
   }
 });
 
-app.post("/delete", async (req, res) => {
+app.delete("/delete", async (req, res) => {
   const data = req.body;
   const id = data.id;
 
