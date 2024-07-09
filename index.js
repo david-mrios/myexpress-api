@@ -3,6 +3,8 @@ const mysql = require("mysql2/promise");
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 let db;
 
@@ -60,7 +62,7 @@ app.get("/create/:name/:age", async (req, res) => {
     if (data.length > 0) {
       const [create] = await db.execute(
         "INSERT INTO usuario (nombre,edad) VALUES (?,?)",
-        [data[0], data[1]]
+        [data[0], data[1]] // greater security
       );
       res.status(201).json({ message: "registration completed" });
     } else {
@@ -72,6 +74,32 @@ app.get("/create/:name/:age", async (req, res) => {
   }
 });
 
-app.put("/update/:id/:name/:age", async (req, res) => {});
+app.post("/update", async (req, res) => {
+  const data = req.body;
+  let updates = [];
+  let params = [];
 
-app.delete("/delete", async (req, res) => {});
+  if (data.name) {
+    updates.push("nombre = ?");
+    params.push(data.name);
+  }
+  if (data.age) {
+    updates.push("edad = ?");
+    params.push(data.age);
+  }
+
+  params.push(data.id);
+
+  if (updates.length > 0) {
+    const query = `UPDATE usuario SET ${updates.join(", ")} WHERE id = ?`;
+    const [result] = await db.execute(query, params);
+
+    if (result.affectedRows > 0) {
+      res.json({ message: "User updated successfully" });
+    } else {
+      res.status(404).send("User not found");
+    }
+  } else {
+    res.status(400).send("No valid parameters provided for update");
+  }
+});
