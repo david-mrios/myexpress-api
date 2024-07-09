@@ -103,3 +103,21 @@ app.post("/update", async (req, res) => {
     res.status(400).send("No valid parameters provided for update");
   }
 });
+
+app.post("/delete", async (req, res) => {
+  const data = req.body;
+  const id = data.id;
+
+  try {
+    const [result] = await db.execute("DELETE FROM usuario WHERE id = ?", [id]);
+    if (result.affectedRows == 1) {
+      res.json({ message: "User deleted successfully" });
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
+});
+
